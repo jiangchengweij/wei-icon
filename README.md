@@ -5,3 +5,4 @@
 支持展示徽标。
 
 具体使用请查看[使用文档](https://ext.dcloud.net.cn/plugin?name=wei-icon)
+

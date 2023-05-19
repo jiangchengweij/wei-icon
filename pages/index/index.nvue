@@ -1,0 +1,191 @@
+<template>
+	<view class="content">
+    <view class="tabs">
+      <view class="tabs-item" :class="current === 0 ? 'active': ''" @tap="onChange(0)">
+        <text class="title">用法示例</text>
+      </view>
+      <view class="tabs-item" :class="current === 1 ? 'active': ''" @tap="onChange(1)">
+        <text class="title">基础图标</text>  
+      </view>
+      <view class="tabs-item" :class="current === 2 ? 'active': ''" @tap="onChange(2)">
+        <text class="title">线框风格</text>
+      </view>
+      <view class="tabs-item" :class="current === 3 ? 'active': ''" @tap="onChange(3)">
+        <text class="title">实底风格</text>
+      </view>
+      <view class="tabs-sliber" :style="{
+        width: sliderWidth + 'px',
+        transform: `translateX(${sliderLeft}px)`
+      }"></view>
+    </view>
+    <view class="tab-bd">
+      <view class="demo-box" v-if="current === 0">
+        <view class="demo-section">
+          <text class="demo-icon-title">基础用法</text>
+          <view class="demo-icon-list">
+            <wei-icon class="demo-icon" name="chat-o"></wei-icon>
+          </view>
+        </view>
+        <view class="demo-section">
+          <text class="demo-icon-title">使用图片URL</text>
+          <view class="demo-icon-list">
+            <wei-icon class="demo-icon" name="https://picx.zhimg.com/80/v2-0a7316e6713c6f1d389cb0dc57b53f93_1440w.webp?source=1940ef5c"></wei-icon>
+          </view>
+        </view>
+        <view class="demo-section">
+          <text class="demo-icon-title">微标提示</text>
+          <view class="demo-icon-list">
+            <view class="demo-icon">
+              <wei-icon name="chat-o" :dot="true"></wei-icon>
+            </view>
+            <view class="demo-icon">
+              <wei-icon name="chat-o" :badge="9"></wei-icon>
+            </view>
+            <view class="demo-icon">
+              <wei-icon name="chat-o" badgeMax="99" :badge="999"></wei-icon>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="demo-box" v-if="current === 1">
+        <view class="demo-icon-list">
+          <view class="demo-icon" v-for="icon in icons[0]" :key="icon" @tap="copyIcon(icon)">
+            <wei-icon :name="icon"></wei-icon>
+            <text class="title">{{ icon }}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="demo-box" v-if="current === 2">
+        <view class="demo-icon-list">
+          <view class="demo-icon" v-for="icon in icons[1]" :key="icon" @tap="copyIcon(icon)">
+            <wei-icon :name="icon"></wei-icon>
+            <text class="title">{{ icon }}</text>
+          </view>
+        </view>
+      </view>
+      <view class="demo-box" v-if="current === 3">
+        <view class="demo-icon-list">
+          <view class="demo-icon" v-for="icon in icons[2]" :key="icon" @tap="copyIcon(icon)">
+            <wei-icon :name="icon"></wei-icon>
+            <text class="title">{{ icon }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+	</view>
+</template>
+
+<script>
+  import iconsData from './icons'; 
+	export default {
+		data() {
+			return {
+        icons: iconsData,
+        current: 0,
+        itemWidth: 0,
+        sliderLeftGap: 0,
+        sliderWidth: 40,
+			}
+		},
+		onLoad() {
+      this.init();
+		},
+    computed: {
+      sliderLeft() {
+        return this.current * this.itemWidth + this.sliderLeftGap;
+      }
+    },
+		methods: {
+      init() {
+        const { windowWidth } = uni.getWindowInfo();
+        this.itemWidth = windowWidth / 4;
+        this.sliderLeftGap = (this.itemWidth - this.sliderWidth) / 2;
+      },
+      onChange(newCurrent) {
+        this.current = newCurrent;
+      },
+      copyIcon(icon) {
+        uni.setClipboardData({
+          data: icon,
+          success: () => {
+            uni.showToast({
+              title: `名称复制成功`
+            })
+          }
+        });
+      }
+		}
+	}
+</script>
+
+<style>
+	.content {
+		display: flex;
+		flex-direction: column;
+    align-items: stretch;
+	}
+  .tabs {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 44px;
+    background-color: #fff;
+  }
+  .tabs-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tabs-item .title {
+    font-size: 14px;
+    color: #646566;
+  }
+  .tabs-item.active .title {
+    color: #323233;
+    font-weight: 600;
+  }
+  .tabs-sliber {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 3px;
+    height: 3px;
+    transition-duration: 0.3s;
+    background-color: #1989fa;
+  }
+  .tab-bd {
+    padding: 20px;
+  }
+  .tab-bd .demo-box {
+    background-color: #fff;
+    border-radius: 12px;
+  }
+  .demo-icon-title {
+    margin: 20px 16px 16px 16px;
+    font-size: 14px;
+    color: #969799;
+  }
+  .demo-icon-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+  .demo-icon {
+    width: 165rpx;
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .demo-icon .title {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #323233;
+    text-align: center;
+  }
+</style>
